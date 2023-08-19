@@ -52,21 +52,54 @@ class MyAppState extends ChangeNotifier {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    MyAppState appState = context.watch<MyAppState>();
-    WordPair pair = appState.current;
-    Icon favicon = appState.favicon;
-
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BigCard(pair: pair),
-            SizedBox(height: MediaQuery.of(context).size.width * .04),
-            RowButtons(appState: appState, favicon: favicon),
-          ],
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              height: MediaQuery.of(context).size.height*4,
+              width: MediaQuery.of(context).size.width,
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: GeneratorPage(),
+            ),
+          ),
+          BottomNavigationBar(
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite),
+                label: 'Favorites',
+              ),
+            ],
+            currentIndex: 0,
+            onTap: (value) {
+              print('selected: $value');
+            },
+          ),
+        ],
       ),
+    );
+  }
+}
+
+class GeneratorPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    var pair = appState.current;
+    var icon = appState.favicon;
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        BigCard(pair: pair),
+        SizedBox(height: MediaQuery.of(context).size.width * .04),
+        RowButtons(appState: appState, favicon: icon),
+      ],
     );
   }
 }
@@ -84,7 +117,7 @@ class RowButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         ElevatedButton.icon(
           onPressed: () {
